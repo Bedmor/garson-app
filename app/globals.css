@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+html {
+  font-size: 16px;
+  @screen sm {
+    font-size: 10px;
+  }
+  @screen md {
+    font-size: 16px;
+  }
+  @screen lg {
+    font-size: 26px;
+  }
+}

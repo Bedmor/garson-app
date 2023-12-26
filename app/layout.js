@@ -1,11 +1,10 @@
 import "./globals.css";
-
 export const metadata = {
   title: "Garson App",
   description: "Garson motivasyon",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, session }) {
   return (
     <html lang="en">
       <head>
@@ -19,7 +18,10 @@ export default function RootLayout({ children }) {
           href="https://icon-library.com/images/icon-favicon/icon-favicon-4.jpg"
         ></link>
       </head>
+
+
       <body className="root">{children}</body>
+
     </html>
   );
 }

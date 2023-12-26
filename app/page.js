@@ -1,13 +1,16 @@
 "use client";
 
-import data from "./json/tasks.json";
+import data from "./api/DB/tasks.json";
 import { useEffect, useState } from "react";
 import Anime from "react-anime";
-import anime from "animejs";
+import { SessionProvider, signOut, useSession } from "next-auth/react";
 
 
 
-
+export function Cross({ className }) {
+  //?Figure this out sometime
+  return (null)
+}
 
 
 export function Check({ theme, className }) {
@@ -88,20 +91,7 @@ export function Crescent({ className }) {
 }
 
 export function Tasks({ theme }) {
-  const [yuvarlak, setYuvarlak] = useState();
-  useEffect(() => {
-    setYuvarlak(
-      anime({
-        targets: "#circle",
-        strokeDashoffset: [anime.setDashoffset, 0],
-        easing: "easeInOutQuad",
-        duration: 1000,
-        loop: false,
-        direction: "forwards",
-        autoplay: true,
-      })
-    );
-  }, []);
+  const { data: session, status } = useSession();
   let task_list = data.tasks;
   const [check_list, setCheckList] = useState(
     Array(task_list.length).fill(false)
@@ -130,35 +120,18 @@ export function Tasks({ theme }) {
                   (yeni[task_list.indexOf(task)] = yeni[task_list.indexOf(task)]
                     ? false
                     : true),
-                  setCheckList(yeni),
-                  console.log(
-                    task_list.indexOf(task),
-                    e.target.checked,
-                    check_list
-                  )
+                  setCheckList(yeni)
                 )}
                 key={task_list.indexOf(task)}
                 className="bg-white dark:bg-black dark:ring-white ring-black ring-2 rounded-md w-16 h-16 relative bottom-[4.5rem] left-2"
               >
                 {check_list[task_list.indexOf(task)] && (
-                  <div className="circle">
-                    <svg className="absolute" width="4rem" height="4rem">
-                      <circle
-                        className="circle"
-                        cx="2rem"
-                        cy="2rem"
-                        r="2rem"
-                        stroke="black"
-                        strokeWidth="0.20rem"
-                        fill="none"
-                      ></circle>
-                    </svg>
+                  status == "authenticated" ? <Cross></Cross> :
                     <Check
                       className="relative"
                       key={"check" + task_list.indexOf(task)}
                       theme={theme}
                     />
-                  </div>
                 )}
               </button>
             </div>
@@ -169,11 +142,12 @@ export function Tasks({ theme }) {
   );
 }
 
-export default function Home() {
+export default function Home(session) {
   const [theme, setTheme] = useState("light");
 
   return (
     <div className={`${theme}`}>
+    <SessionProvider session={session}>
       <div
         className={`SUB flex dark:bg-black bg-white flex-col justify-center place-items-center gap-10`}
       >
@@ -226,6 +200,7 @@ export default function Home() {
         <div className="BAR flexbox border-b-2 dark:border-white border-black w-full h-24"></div>
         <h1>Made By Bedmor</h1>
       </div>
+      </SessionProvider>
     </div>
   );
 }

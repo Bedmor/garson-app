@@ -1,18 +1,23 @@
 "use client";
-
+import { useSession, signIn, signOut, SessionProvider } from "next-auth/react"
 import { useState } from "react";
 
-export function Login(event) {
-  event.preventDefault()
-  console.log(username + password);
+export function Login(user, pass) {
+  let res = signIn("credentials", {
+    username: user,
+    password: pass,
+    callbackUrl: "/panel",
+  });
+  console.log(res);
 }
 
 let formStyle =
   " ring-2 rounded-md w-40 ring-white px-2 py-1 text-zinc-200 placeholder-gray-400 bg-zinc-950";
 
-export default function LoginForm() {
-  const [username, setusername] = useState();
-  const [password, setpassword] = useState();
+export function LoginForm() {
+  const { data: session, status } = useSession();
+  const [user, setusername] = useState();
+  const [pass, setpassword] = useState();
   return (
     <div className="flex justify-center items-center w-screen h-screen bg-zinc-950">
       <div className="absolute top-3 left-3 ">
@@ -49,8 +54,9 @@ export default function LoginForm() {
         </svg>
       </div>
       <form
-        onSubmit={() => {
-          Login();
+        onSubmit={(e) => {
+          e.preventDefault();
+          Login(user, pass);
         }}
         className="flex justify-center items-center flex-col rounded-sm h-48 w-48 gap-6 ring-2 ring-white"
       >
@@ -77,4 +83,8 @@ export default function LoginForm() {
       </form>
     </div>
   );
+}
+
+export default function Page(session) {
+  return <div><SessionProvider session={session}><LoginForm></LoginForm></SessionProvider></div>
 }

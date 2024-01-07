@@ -7,9 +7,13 @@ import { SessionProvider, signOut, useSession } from "next-auth/react";
 
 
 
-export function Cross({ className }) {
+export function Cross({ theme, className }) {
   //?Figure this out sometime
-  return (null)
+  return <div className={className}>
+    <svg xmlns="http://www.w3.org/2000/svg" width="4rem" height="4rem" viewBox="0 0 20 20">
+      <path fill={theme == "light" ? "black" : "white"} d="M4.293 4.293a1 1 0 0 1 1.414 0L10 8.586l4.293-4.293a1 1 0 1 1 1.414 1.414L11.414 10l4.293 4.293a1 1 0 0 1-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 0 1-1.414-1.414L8.586 10L4.293 5.707a1 1 0 0 1 0-1.414" />
+    </svg>
+  </div>;
 }
 
 
@@ -126,7 +130,10 @@ export function Tasks({ theme }) {
                 className="bg-white dark:bg-black dark:ring-white ring-black ring-2 rounded-md w-16 h-16 relative bottom-[4.5rem] left-2"
               >
                 {check_list[task_list.indexOf(task)] && (
-                  status == "authenticated" ? <Cross></Cross> :
+                  status == "authenticated" ? <Cross
+                    className="relative"
+                    key={"cross" + task_list.indexOf(task)}
+                    theme={theme}></Cross> :
                     <Check
                       className="relative"
                       key={"check" + task_list.indexOf(task)}
@@ -147,59 +154,59 @@ export default function Home(session) {
 
   return (
     <div className={`${theme}`}>
-    <SessionProvider session={session}>
-      <div
-        className={`SUB flex dark:bg-black bg-white flex-col justify-center place-items-center gap-10`}
-      >
-        <div className="BAR flexbox flex-row border-b-2 dark:border-white border-black w-full h-24">
-          <svg
-            className="left-12 top-0 w-20 h-20"
-            width="190"
-            height="227"
-            viewBox="0 0 190 227"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            stroke="white"
-            strokeWidth="4"
-          >
-            <path
-              className="border-black border-8"
-              d="M0 55C0 45.0589 8.05888 37 18 37H170C181.046 37 190 45.9543 190 57V209C190 218.941 181.941 227 172 227H18C8.05887 227 0 218.941 0 209V55Z"
-              fill="black"
-            />
-            <path d="M95 150L30.0481 37.5L159.952 37.5L95 150Z" fill="white" />
-            <circle cx="95" cy="122" r="10" fill="black" />
-            <circle cx="95" cy="88" r="10" fill="black" />
-            <path d="M95 42L128 22.9474V61.0526L95 42Z" fill="black" />
-            <path d="M98 42L65 61.0526V22.9474L98 42Z" fill="black" />
-          </svg>
-          <h1 className="HEADER dark:text-white text-7xl leading-normal relative -top-[5.5rem] font-bold font-mono text-center margin-0">
-            Garsonify
-          </h1>
-          <button
-            onClick={() => {
-              if (theme == "light") {
-                setTheme("dark");
-              }
-              if (theme == "dark") {
-                setTheme("light");
-              }
-            }}
-            className="w-14 h-12  absolute right-4 top-0 my-6"
-          >
-            <div>
-              {theme == "light" ? (
-                <Sun className="sevece" />
-              ) : (
-                <Crescent className="sevece" />
-              )}
-            </div>
-          </button>
+      <SessionProvider session={session}>
+        <div
+          className={`SUB flex dark:bg-black bg-white flex-col justify-center place-items-center gap-10`}
+        >
+          <div className="BAR flexbox flex-row border-b-2 dark:border-white border-black w-full h-24">
+            <svg
+              className="left-12 top-0 w-20 h-20"
+              width="190"
+              height="227"
+              viewBox="0 0 190 227"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              stroke="white"
+              strokeWidth="4"
+            >
+              <path
+                className="border-black border-8"
+                d="M0 55C0 45.0589 8.05888 37 18 37H170C181.046 37 190 45.9543 190 57V209C190 218.941 181.941 227 172 227H18C8.05887 227 0 218.941 0 209V55Z"
+                fill="black"
+              />
+              <path d="M95 150L30.0481 37.5L159.952 37.5L95 150Z" fill="white" />
+              <circle cx="95" cy="122" r="10" fill="black" />
+              <circle cx="95" cy="88" r="10" fill="black" />
+              <path d="M95 42L128 22.9474V61.0526L95 42Z" fill="black" />
+              <path d="M98 42L65 61.0526V22.9474L98 42Z" fill="black" />
+            </svg>
+            <h1 className="HEADER dark:text-white text-7xl leading-normal relative -top-[5.5rem] font-bold font-mono text-center margin-0">
+              Garsonify
+            </h1>
+            <button
+              onClick={() => {
+                if (theme == "light") {
+                  setTheme("dark");
+                }
+                if (theme == "dark") {
+                  setTheme("light");
+                }
+              }}
+              className="w-14 h-12  absolute right-4 top-0 my-6"
+            >
+              <div>
+                {theme == "light" ? (
+                  <Sun className="sevece" />
+                ) : (
+                  <Crescent className="sevece" />
+                )}
+              </div>
+            </button>
+          </div>
+          <Tasks theme={theme}></Tasks>
+          <div className="BAR flexbox border-b-2 dark:border-white border-black w-full h-24"></div>
+          <h1>Made By Bedmor</h1>
         </div>
-        <Tasks theme={theme}></Tasks>
-        <div className="BAR flexbox border-b-2 dark:border-white border-black w-full h-24"></div>
-        <h1>Made By Bedmor</h1>
-      </div>
       </SessionProvider>
     </div>
   );

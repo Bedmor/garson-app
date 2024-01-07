@@ -16,7 +16,7 @@ export async function DeleteFromDatabase(taskToBeDeleted) {
   indexofdeleted = finalData.indexOf(`"${taskToBeDeleted}"`);
   finalData.pop(indexofdeleted);
   fs.writeFile(
-    "./tasks.json",
+    "./app/api/DB/tasks.json",
     `{"tasks":[${finalData}]}`,
     "utf-8",
     (err) => {
@@ -35,7 +35,7 @@ export async function AddToDatabase(taskToBeAdded) {
   });
   finalData = [...finalData, `"${taskToBeAdded}"`];
   fs.writeFile(
-    "./tasks.json",
+    "./app/api/DB/tasks.json",
     `{"tasks":[${finalData}]}`,
     "utf-8",
     (err) => {

@@ -33,7 +33,7 @@ export function Manager() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            fetch("/api/DB", {body: JSON.stringify({task: taskName}), method: "POST"}).then((res) => {console.log(res);});
+            fetch("/api/DB", {body: JSON.stringify({task: taskName}),headers:{"Content-Type":"application/json"}, method: "POST"}).then((res) => {console.log(res);});
           }}
           className="flex justify-center items-center h-16 w-full bg-black ring-2 ring-white"
         >

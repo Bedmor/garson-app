@@ -1,9 +1,9 @@
 "use client";
 
 import data from "./api/DB/tasks.json";
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import Anime from "react-anime";
-import { SessionProvider, signOut, useSession } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
 
 
 
@@ -105,7 +105,7 @@ export function Tasks({ theme }) {
   return (
     <div className="TASKS flex flex-col w-full place-items-center gap-5 px-5">
       {task_list == "" ? (
-        <h1 className="dark:text-white dark:ring-white ring-2 ring-black rounded-md p-8">
+        <h1 className="dark:text-white dark:ring-white ring-2 ring-black rounded-md m-32 p-8">
           No Tasks For Now
         </h1>
       ) : (
@@ -120,32 +120,33 @@ export function Tasks({ theme }) {
               </h1>
               <button
                 checked={check_list[task_list.indexOf(task)]}
-                onClick={(e) => (
-                  (yeni[task_list.indexOf(task)] = yeni[task_list.indexOf(task)]
-                    ? false
-                    : true),
-                  setCheckList(yeni)
-                )}
-                key={task_list.indexOf(task)}
-                className="bg-white dark:bg-black dark:ring-white ring-black ring-2 rounded-md w-16 h-16 relative bottom-[4.5rem] left-2"
+                onClick={status == "authenticated" ? (e) => { fetch("/api/DB", { body: JSON.stringify({ task: task }), headers: { "Content-Type": "application/json" }, method: "DELETE" }).then((res) => { console.log(res); }); }
+                 : (e) => (
+              (yeni[task_list.indexOf(task)] = yeni[task_list.indexOf(task)]
+              ? false
+              : true),
+              setCheckList(yeni)
+              )}
+              key={task_list.indexOf(task)}
+              className="bg-white dark:bg-black dark:ring-white ring-black ring-2 rounded-md w-16 h-16 relative bottom-[4.5rem] left-2"
               >
-                {check_list[task_list.indexOf(task)] && (
-                  status == "authenticated" ? <Cross
+              {check_list[task_list.indexOf(task)] && (
+                status == "authenticated" ? <Cross
+                  className="relative"
+                  key={"cross" + task_list.indexOf(task)}
+                  theme={theme}></Cross> :
+                  <Check
                     className="relative"
-                    key={"cross" + task_list.indexOf(task)}
-                    theme={theme}></Cross> :
-                    <Check
-                      className="relative"
-                      key={"check" + task_list.indexOf(task)}
-                      theme={theme}
-                    />
-                )}
-              </button>
+                    key={"check" + task_list.indexOf(task)}
+                    theme={theme}
+                  />
+              )}
+            </button>
             </div>
-          );
-        })
+  );
+})
       )}
-    </div>
+    </div >
   );
 }
 
@@ -156,7 +157,7 @@ export default function Home(session) {
     <div className={`${theme}`}>
       <SessionProvider session={session}>
         <div
-          className={`SUB flex dark:bg-black bg-white flex-col justify-center place-items-center gap-10`}
+          className={`SUB flex w-full h-full dark:bg-black bg-white flex-col justify-center place-items-center gap-10`}
         >
           <div className="BAR flexbox flex-row border-b-2 dark:border-white border-black w-full h-24">
             <svg
@@ -204,8 +205,8 @@ export default function Home(session) {
             </button>
           </div>
           <Tasks theme={theme}></Tasks>
-          <div className="BAR flexbox border-b-2 dark:border-white border-black w-full h-24"></div>
-          <h1>Made By Bedmor</h1>
+          <div className="BAR flex justify-center items-center border-t-2 dark:border-white border-black w-full h-24"><h1 className="text-black dark:text-white">Made By Bedmor</h1></div>
+          
         </div>
       </SessionProvider>
     </div>

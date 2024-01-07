@@ -1,7 +1,7 @@
 "use server";
 import data from "./tasks.json";
 import fs from "fs";
-import fsp from "fs/promises";
+
 
 
 
@@ -13,8 +13,9 @@ export async function DeleteFromDatabase(taskToBeDeleted) {
   data.tasks.map((task) => {
     finalData.push(`"${task}"`);
   });
-  indexofdeleted = finalData.indexOf(`"${taskToBeDeleted}"`);
-  finalData.pop(indexofdeleted);
+
+  let indexofdeleted = finalData.indexOf(`"${taskToBeDeleted}"`);
+  finalData.splice(indexofdeleted, 1);
   fs.writeFile(
     "./app/api/DB/tasks.json",
     `{"tasks":[${finalData}]}`,
@@ -26,21 +27,23 @@ export async function DeleteFromDatabase(taskToBeDeleted) {
   return true;
 }
 export async function AddToDatabase(taskToBeAdded) {
-  if (taskToBeAdded == undefined) {
-    return false;
-  }
   let finalData = [];
   data.tasks.map((task) => {
     finalData.push(`"${task}"`);
   });
-  finalData = [...finalData, `"${taskToBeAdded}"`];
-  fs.writeFile(
-    "./app/api/DB/tasks.json",
-    `{"tasks":[${finalData}]}`,
-    "utf-8",
-    (err) => {
-      if (err) throw err;
-    }
-  );
-  return true;
+  if (taskToBeAdded == undefined || finalData.includes(`"${taskToBeAdded}"`)) {
+    return false;
+  }
+  else {
+    finalData = [...finalData, `"${taskToBeAdded}"`];
+    fs.writeFile(
+      "./app/api/DB/tasks.json",
+      `{"tasks":[${finalData}]}`,
+      "utf-8",
+      (err) => {
+        if (err) throw err;
+      }
+    );
+    return true;
+  }
 }

@@ -1,9 +1,28 @@
 "use client";
 
 import data from "./api/DB/tasks.json";
-import {useState } from "react";
+import { useState } from "react";
 import Anime from "react-anime";
-import { SessionProvider, useSession } from "next-auth/react";
+import { SessionProvider, useSession, signOut } from "next-auth/react";
+
+
+export function Menu({ className }) {
+  return <div className="top- left-20 absolute">
+    <div className="flex flex-col gap-5 dark:border-white border-black dark:bg-black bg-white">
+      <button onClick={signOut} className="flex flex-row gap-5 items-center">Logout</button>
+    </div>
+  </div>
+}
+
+
+export function User({ className }) {
+  return <div className="top- left-20 absolute">
+    <svg xmlns="http://www.w3.org/2000/svg" width="4rem" height="4rem" viewBox="0 0 20 20">
+      <path fill="currentColor" d="M10 12a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
+      <path fill="currentColor" fillRule="evenodd" d="M10 14c-3.866 0-7 2.239-7 5v1h14v-1c0-2.761-3.134-5-7-5z" clipRule="evenodd" />
+    </svg>
+  </div>
+}
 
 
 
@@ -121,37 +140,96 @@ export function Tasks({ theme }) {
               <button
                 checked={check_list[task_list.indexOf(task)]}
                 onClick={status == "authenticated" ? (e) => { fetch("/api/DB", { body: JSON.stringify({ task: task }), headers: { "Content-Type": "application/json" }, method: "DELETE" }).then((res) => { console.log(res); }); }
-                 : (e) => (
-              (yeni[task_list.indexOf(task)] = yeni[task_list.indexOf(task)]
-              ? false
-              : true),
-              setCheckList(yeni)
-              )}
-              key={task_list.indexOf(task)}
-              className="bg-white dark:bg-black dark:ring-white ring-black ring-2 rounded-md w-16 h-16 relative bottom-[4.5rem] left-2"
+                  : (e) => (
+                    (yeni[task_list.indexOf(task)] = yeni[task_list.indexOf(task)]
+                      ? false
+                      : true),
+                    setCheckList(yeni)
+                  )}
+                key={task_list.indexOf(task)}
+                className="bg-white dark:bg-black dark:ring-white ring-black ring-2 rounded-md w-16 h-16 relative bottom-[4.5rem] left-2"
               >
-              {check_list[task_list.indexOf(task)] && (
-                status == "authenticated" ? <Cross
-                  className="relative"
-                  key={"cross" + task_list.indexOf(task)}
-                  theme={theme}></Cross> :
-                  <Check
+                {check_list[task_list.indexOf(task)] && (
+                  status == "authenticated" ? <Cross
                     className="relative"
-                    key={"check" + task_list.indexOf(task)}
-                    theme={theme}
-                  />
-              )}
-            </button>
+                    key={"cross" + task_list.indexOf(task)}
+                    theme={theme}></Cross> :
+                    <Check
+                      className="relative"
+                      key={"check" + task_list.indexOf(task)}
+                      theme={theme}
+                    />
+                )}
+              </button>
             </div>
-  );
-})
+          );
+        })
       )}
     </div >
   );
 }
 
+export function Bar({ theme, changeTheme }) {
+  const [menu, setMenu] = useState(false)
+  return (<div className="BAR flexbox flex-row border-b-2 dark:border-white border-black w-full h-24">
+    <svg
+      className="left-12 top-0 w-20 h-20"
+      width="190"
+      height="227"
+      viewBox="0 0 190 227"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      stroke="white"
+      strokeWidth="4"
+    >
+      <path
+        className="border-black border-8"
+        d="M0 55C0 45.0589 8.05888 37 18 37H170C181.046 37 190 45.9543 190 57V209C190 218.941 181.941 227 172 227H18C8.05887 227 0 218.941 0 209V55Z"
+        fill="black"
+      />
+      <path d="M95 150L30.0481 37.5L159.952 37.5L95 150Z" fill="white" />
+      <circle cx="95" cy="122" r="10" fill="black" />
+      <circle cx="95" cy="88" r="10" fill="black" />
+      <path d="M95 42L128 22.9474V61.0526L95 42Z" fill="black" />
+      <path d="M98 42L65 61.0526V22.9474L98 42Z" fill="black" />
+    </svg>
+    <h1 className="HEADER dark:text-white text-7xl leading-normal relative -top-[5.5rem] font-bold font-mono text-center margin-0">
+      Garsonify
+    </h1>
+    <button
+      onClick={changeTheme}
+      className="w-14 h-12  absolute right-4 top-0 my-6"
+    >
+
+      <div>
+        {theme == "light" ? (
+          <Sun className="sevece" />
+        ) : (
+          <Crescent className="sevece" />
+        )}
+      </div>
+    </button>
+    <button onClick={() => {
+      setMenu(!menu)
+    }}>
+      <User>
+        {menu && <Menu></Menu>}
+      </User>
+    </button>
+
+  </div>)
+}
+
 export default function Home(session) {
   const [theme, setTheme] = useState("light");
+  function changeTheme() {
+    if (theme == "light") {
+      setTheme("dark");
+    }
+    if (theme == "dark") {
+      setTheme("light");
+    }
+  }
 
   return (
     <div className={`${theme}`}>
@@ -159,54 +237,10 @@ export default function Home(session) {
         <div
           className={`SUB flex w-full h-full dark:bg-black bg-white flex-col justify-center place-items-center gap-10`}
         >
-          <div className="BAR flexbox flex-row border-b-2 dark:border-white border-black w-full h-24">
-            <svg
-              className="left-12 top-0 w-20 h-20"
-              width="190"
-              height="227"
-              viewBox="0 0 190 227"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              stroke="white"
-              strokeWidth="4"
-            >
-              <path
-                className="border-black border-8"
-                d="M0 55C0 45.0589 8.05888 37 18 37H170C181.046 37 190 45.9543 190 57V209C190 218.941 181.941 227 172 227H18C8.05887 227 0 218.941 0 209V55Z"
-                fill="black"
-              />
-              <path d="M95 150L30.0481 37.5L159.952 37.5L95 150Z" fill="white" />
-              <circle cx="95" cy="122" r="10" fill="black" />
-              <circle cx="95" cy="88" r="10" fill="black" />
-              <path d="M95 42L128 22.9474V61.0526L95 42Z" fill="black" />
-              <path d="M98 42L65 61.0526V22.9474L98 42Z" fill="black" />
-            </svg>
-            <h1 className="HEADER dark:text-white text-7xl leading-normal relative -top-[5.5rem] font-bold font-mono text-center margin-0">
-              Garsonify
-            </h1>
-            <button
-              onClick={() => {
-                if (theme == "light") {
-                  setTheme("dark");
-                }
-                if (theme == "dark") {
-                  setTheme("light");
-                }
-              }}
-              className="w-14 h-12  absolute right-4 top-0 my-6"
-            >
-              <div>
-                {theme == "light" ? (
-                  <Sun className="sevece" />
-                ) : (
-                  <Crescent className="sevece" />
-                )}
-              </div>
-            </button>
-          </div>
+          <Bar changeTheme={changeTheme} theme={theme}></Bar>
           <Tasks theme={theme}></Tasks>
           <div className="BAR flex justify-center items-center border-t-2 dark:border-white border-black w-full h-24"><h1 className="text-black dark:text-white">Made By Bedmor</h1></div>
-          
+
         </div>
       </SessionProvider>
     </div>

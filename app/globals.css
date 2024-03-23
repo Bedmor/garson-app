@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 
+#__next-route-announcer__ {
+  display: none;
+}
 
 html {
   font-size: 16px;
